@@ -1,14 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import tetfundBg from '../assets/tetfund.png';
-
+import { Link } from 'react-router-dom'
+import heroImg from '../assets/hero.png'
 const Hero = () => {
   return (
     <div className="relative bg-green-200 h-[600px] w-full overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
         <img
-          src={tetfundBg}
+          src={heroImg}
           alt="FUTO Hostel Building"
           className="w-full h-full object-cover opacity-30"
         />
