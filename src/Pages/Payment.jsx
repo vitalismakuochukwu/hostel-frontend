@@ -10,7 +10,7 @@ const Payment = () => {
   const [loading, setLoading] = useState(true);
 
   // Replace with your actual Paystack Public Key
-  const publicKey = 'pk_test_5d910be209cb7bad9393c2945118639cab993ca1'; 
+  const publicKey = 'pk_live_5f4795138121fbd707356a40a66cdd5de83bc05d'; 
 
   // Load Paystack Script dynamically to avoid 'react-paystack' dependency issues
   useEffect(() => {
@@ -67,25 +67,50 @@ const Payment = () => {
     window.print();
   };
 
-  const handlePayment = () => {
+  // const handlePayment = () => {
+  //   if (!window.PaystackPop) {
+  //     alert("Payment system is loading. Please try again in a moment.");
+  //     return;
+  //   }
+    
+  //   const handler = window.PaystackPop.setup({
+  //     key: publicKey,
+  //     email: "student@example.com", // Ideally fetch user email from profile/context
+  //     amount: amount * 100, // Amount in kobo
+  //     ref: (new Date()).getTime().toString(),
+  //     callback: function(response) {
+  //       onSuccess(response);
+  //     },
+  //     onClose: onClose
+  //   });
+  //   handler.openIframe();
+  // };
+const handlePayment = () => {
     if (!window.PaystackPop) {
-      alert("Payment system is loading. Please try again in a moment.");
+      alert("Payment system is still loading. Please wait a second.");
       return;
     }
     
+    // Ensure we use the actual student's email from the 'user' state
+    const studentEmail = user?.email || "student@example.com";
+
     const handler = window.PaystackPop.setup({
-      key: publicKey,
-      email: "student@example.com", // Ideally fetch user email from profile/context
-      amount: amount * 100, // Amount in kobo
-      ref: (new Date()).getTime().toString(),
+      // 1. Ensure 'publicKey' variable at the top of your file is set to 'pk_live_...'
+      key: publicKey, 
+      email: studentEmail,
+      amount: amount * 100, // Converts Naira to Kobo
+      ref: `REF-${new Date().getTime()}`, // Unique reference ID
       callback: function(response) {
+        // This runs after the student successfully pays
         onSuccess(response);
       },
-      onClose: onClose
+      onClose: () => {
+        alert("Transaction was not completed.");
+      }
     });
+
     handler.openIframe();
   };
-
   if (!bookingId || !amount) {
     return (
       <div className="p-10 text-center">
